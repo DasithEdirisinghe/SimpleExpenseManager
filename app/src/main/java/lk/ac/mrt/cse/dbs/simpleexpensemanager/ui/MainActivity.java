@@ -28,9 +28,12 @@ import android.support.v7.widget.Toolbar;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.R;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.InMemoryDemoExpenseManager;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.PersistentExpenseManager;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.db.DbHelper;
 
 public class MainActivity extends AppCompatActivity {
     private ExpenseManager expenseManager;
+    private DbHelper database;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -64,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        /***  Begin generating dummy data for In-Memory implementation  ***/
-        expenseManager = new InMemoryDemoExpenseManager();
-        /*** END ***/
+        /***  Begin generating  Persistent implementation  ***/
+        expenseManager = new PersistentExpenseManager(database);
+        /*** END **/
     }
 
     /**
@@ -84,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return the respective fragment.
             switch (position) {
-                case 0:
-                    return ManageExpensesFragment.newInstance(expenseManager);
                 case 1:
                     return AddAccountFragment.newInstance(expenseManager);
                 case 2:
@@ -104,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
-                    return getString(R.string.label_manage);
                 case 1:
                     return getString(R.string.label_add_account);
                 case 2:
